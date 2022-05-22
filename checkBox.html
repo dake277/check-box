@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-Box</title>
+    <style>
+        body{
+            margin: 0;
+        }
+        #content{
+            width: 100vw;
+            height: 100vh;
+            /*position: relative;*/
+            display: flex;
+            align-items: center;
+        }
+
+        .group{
+            display: flex;
+            width: 150px;
+            flex-wrap: wrap;
+            justify-content: left;
+            margin: auto;
+
+        }
+        #chooseArea{
+            /* 隐藏元素，移动时在显示，否则覆盖原有的元素，导致无法获取点击事件*/
+            display: none;
+            position: absolute;
+            outline: 1px dashed black;
+            /*border: 1px solid red;*/
+
+        }
+        input{
+            width: 20px;
+            height: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="content">
+        <div class="group">
+            <input type="checkbox">
+            <input type="checkbox">
+            <input type="checkbox">
+            <input type="checkbox">
+            <input type="checkbox">
+            <input type="checkbox">
+            <input type="checkbox">
+            <input type="checkbox">
+            <input type="checkbox">
+            <input type="checkbox">
+            <input type="checkbox">
+            <input type="checkbox">
+            <input type="checkbox">
+            <input type="checkbox">
+            <input type="checkbox">
+        </div>
+    </div>
+
+<script>
+
+  let body = document.getElementById('content')
+  let startX, startY
+  let checkBox = document.getElementsByTagName('input')
+
+  window.addEventListener('mousedown', handleMouseDown)
+
+
+  function handleMouseDown(e){
+
+    let chooseArea = document.createElement('div')
+    console.log(chooseArea)
+    body.appendChild(chooseArea)
+    chooseArea.setAttribute('id', 'chooseArea')
+
+    chooseArea.style.left = `${e.clientX}px`
+    chooseArea.style.top = `${e.clientY}px`
+    startX = e.clientX
+    console.log(startX)
+    startY = e.clientY
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mouseup', handleMouseUp)
+    console.log('mousedown')
+  }
+
+  function handleMouseMove(e){
+    let chooseArea =  document.getElementById('chooseArea')
+    console.log(chooseArea)
+    chooseArea.style.display = 'block'
+    chooseArea.style.left = `${Math.min(startX, e.clientX)}px`
+    chooseArea.style.top = `${Math.min(startY, e.clientY)}px`
+    chooseArea.style.width = `${Math.abs(e.clientX - startX)}px`
+    chooseArea.style.height = `${Math.abs(e.clientY - startY)}px`
+    console.log(chooseArea.offsetTop);
+
+    for (let i = 0; i < checkBox.length; i++) {
+      checkBox[i].checked = !!isItem(checkBox[i]);
+    }
+
+    e.stopPropagation()
+    e.preventDefault()
+  }
+
+  function handleMouseUp(){
+    console.log('mouseup')
+    startX = 0
+    startY = 0
+    chooseArea.style.display = "none";
+    body.removeChild(document.getElementById('chooseArea'))
+    window.removeEventListener('mousemove', handleMouseMove )
+    window.removeEventListener('mouseup', handleMouseUp)
+  }
+
+  function isItem(item) {
+    return !(item.offsetTop > chooseArea.offsetTop + chooseArea.offsetHeight ||
+      item.offsetLeft > chooseArea.offsetLeft + chooseArea.offsetWidth ||
+      chooseArea.offsetTop > item.offsetTop + item.offsetHeight ||
+      chooseArea.offsetLeft > item.offsetLeft + item.offsetWidth
+    )
+  }
+
+</script>
+</body>
+</html>
