@@ -1,3 +1,3 @@
 # checkBox 框选功能
 
-![](https://github.com/JL978/spotify-clone-client/blob/master/demo/FrontPage.png)
+![img](https://github.com/dake277/check-box/blob/master/demo.gif)
